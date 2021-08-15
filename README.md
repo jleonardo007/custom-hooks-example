@@ -29,42 +29,59 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
+In React, custom hooks have the purpose to group the logic related with the state and effects (useState,useEffect and another hooks) so this way the rest of the component (mostly jsx) consumes the data bring by the custom hook. Today, we take a look on this approach by implementing a timer component.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Our component looks like this:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+![Timer Component](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/9cmuuq3w1pw4pkyimj05.png)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+This component is compose by two components more, a `<TimerDisplay/>` (blue box) and a `<TimerControls/>` (orange box)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+![Timer Components](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/cpiomo1fu80icnbic4qm.png)
 
-## Learn More
+Now, take a detailed look to their respectives codes:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### `<App/>` code looks like this.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+![app code](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/m76wpidcwbs3a5xefvxl.png)
 
-### Code Splitting
+You notice both the state-effects logic and the jsx are within the component `<App/>` this is ok but think a moment if our Timer component requires more features is quite likely that state-effects logic grows and ofcourse the jsx too and yes, this becomes in a code hard to read, maintain and scale. And that's not all, make zoom at the return statement:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+![return statement](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/6b7ety4v40mgg243y2r2.png)
 
-### Analyzing the Bundle Size
+Like you see, the `<TimerControls/>` has the prop `setTimer`, and means this uses the state update function directly.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+![Timer controls code](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/8zsfrrqe7xedh2vumbce.png)
 
-### Making a Progressive Web App
+Dont be scared, it's just a simple component with a few handlers in it, but yes, you guessed it, if the parent component grows `<TimerControls/>` will too.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+So the solution is separate the state-effects logic and handlers and implement them througth a custom hook. In this case, our custom hook gonna be `useTimer()`. Is mandatory add the word **use** before the hook name this way **React** knows that the component uses a hook.
 
-### Advanced Configuration
+### `useTimer()` code looks like this.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+![use timer code](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/3akw43vr4qboa2uu9duj.png)
 
-### Deployment
+In this case `useTimer()` imports the handlers cause each one requires the `setTimer()` (if you have a handler that doesn't update the state, the handlers can be consume by the component itself and not the custom hook). The new handlers code looks like this.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+![handlers code](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/wgzm3mt8mr34efc225xn.png)
 
-### `yarn build` fails to minify
+The one million question is how `<App/>` consumes `useTimer()`? Make zoom again but now at the `useTimer()` return statement:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+![use timer return](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/sekxuotz4we2sile9qz1.png)
+
+`useTimer()` returns and object with timer (the state), alarmRef (it's just a ref attatched to an `<audio>` tag that plays when timer comes to zero) and the handlers (`setMinutes` , `playOrPauseTimer` and `resetTimer`). About the last ones note that are functions that returns another functions (the handlers imported) aka closures, now see how the components look like:
+
+### `<App/>`
+
+![App component](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/4djszhweu9kaytcf4c1y.png)
+
+### `<TimerControls/>`
+
+![timer controls](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/heo2sl7105oxahju7xoe.png)
+
+## Conclusions
+
+- If you think that your components code gonna grow, separate the state-effects logic and handlers througth a custom hook.
+- If your components handlers require update the state use them within a custom hook.
+- Don't forget the **use** word before name your hook.
+- Some React experts think that React more that an UI library is a mental model, so the most important hook that you can use is `useYourImagination`
