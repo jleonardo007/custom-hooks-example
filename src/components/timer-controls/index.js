@@ -2,36 +2,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlayCircle, faRedo, faPauseCircle } from "@fortawesome/free-solid-svg-icons";
 import "./styles.css";
 
-export default function TimerControls({ timer, setTimer }) {
+export default function TimerControls({ timer, handlers }) {
   const { isPaused } = timer;
-
-  function setMinutes(e) {
-    if (timer.isPaused)
-      setTimer((prevState) => {
-        return {
-          ...prevState,
-          minutes: e.target.value,
-        };
-      });
-  }
-
-  function playOrPauseTimer() {
-    setTimer((prevState) => {
-      return {
-        ...prevState,
-        isPaused: !prevState.isPaused,
-      };
-    });
-  }
-
-  function resetTimer() {
-    setTimer((prevState) => {
-      return {
-        ...prevState,
-        reset: true,
-      };
-    });
-  }
+  const { setMinutes, playOrPauseTimer, resetTimer } = handlers;
 
   return (
     <div className="timer-controls">
