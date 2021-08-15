@@ -1,0 +1,16 @@
+.timer-display {
+  align-self: center;
+  justify-self: end;
+  width: 80%;
+  background-color: #dbf6e9;
+  text-align: center;
+  font-family: "Big Shoulders Stencil Display", cursive;
+}
+
+.timer-display span {
+  font-size: 5vw;
+}
+
+.colon {
+  margin: 0 1rem;
+}

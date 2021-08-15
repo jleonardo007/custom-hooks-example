@@ -1,0 +1,50 @@
+.timer-controls {
+  place-self: center;
+}
+
+.timer-buttons,
+.minutes-input {
+  display: flex;
+  justify-content: center;
+}
+
+.minutes-input {
+  margin-bottom: 1rem;
+}
+
+.minutes-input input[type="number"] {
+  width: 50%;
+  height: 2.5vw;
+  padding-left: 0.25rem;
+  border: none;
+  font-size: 2vw;
+  font-weight: bold;
+}
+
+.minutes-input input[type="number"]:focus {
+  outline: none;
+}
+
+.timer-buttons button:hover {
+  color: tomato;
+  background-color: #fff;
+}
+
+.timer-buttons button:active {
+  color: #21c961;
+  background-color: tomato;
+}
+
+.timer-buttons button {
+  width: 2.3vw;
+  height: 2.3vw;
+  display: grid;
+  place-content: center;
+  margin-left: 0.5rem;
+  border: none;
+  border-radius: 50%;
+  background-color: tomato;
+  color: #fff;
+  font-size: 1.5vw;
+  cursor: pointer;
+}

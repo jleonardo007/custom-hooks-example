@@ -1,0 +1,14 @@
+.timer {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  background-color: #dbf6e9;
+}
+
+.timer-container {
+  width: 35vw;
+  height: 15vh;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  background-color: #21c961;
+}
